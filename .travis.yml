@@ -1,0 +1,24 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t ruchirengr/react -f Dockerfile.dev .
+  
+script:
+  - docker run  ruchirengr/react npm run test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "docker"
+  env: "Docker-env-1"
+  access_key_id: 
+    secure: "$AWS_ACCESS_KEY"
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
+  bucket-name: "elasticbeanstalk-us-east-1-651703807036"
+  path: "docker"
+  on:
+    branch: master
+  skip_cleanup: true
